@@ -17,7 +17,7 @@
         android:theme="@style/Theme.BeatsApp"
         tools:targetApi="31">
         <activity
-            android:name=".SignUpActivity"
+            android:name=".ui.landing.SignUpActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

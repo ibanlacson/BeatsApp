@@ -26,7 +26,9 @@ class SplashActivity : AppCompatActivity() {
             override fun onTick(p0: Long) {
             }
             override fun onFinish() {
+
                 val intent = Intent(this@SplashActivity,LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             }
         }.start()
