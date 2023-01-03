@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Temporary Colors -->
+    <color name="home_ic_color">#1194A4</color>
+    <color name="favorite_ic_color">#5B37B7</color>
+    <color name="search_ic_color">#c9379d</color>
+    <color name="profile_ic_color">#e6a919</color>
+    <color name="history_ic_color">#006A69</color>
 </resources>

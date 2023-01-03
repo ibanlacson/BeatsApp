@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/history"
+        android:enabled="true"
+        android:icon="@drawable/ic_history"
+        android:title="History"
+        app:cnb_iconColor ="@color/history_ic_color"/>
+
+    <item
+        android:id="@+id/search"
+        android:enabled="true"
+        android:icon="@drawable/ic_search"
+        android:title="Search"
+        app:cnb_iconColor ="@color/search_ic_color"/>
+
+
+    <item
+        android:id="@+id/home"
+        android:enabled="true"
+        android:icon="@drawable/ic_home"
+        android:title="Home"
+        app:cnb_iconColor ="@color/home_ic_color"/>
+
+    <item
+        android:id="@+id/favorites"
+        android:enabled="true"
+        android:icon="@drawable/ic_love"
+        android:title="Favorites"
+        app:cnb_iconColor ="@color/favorite_ic_color"/>
+
+    <item
+        android:id="@+id/profile"
+        android:enabled="true"
+        android:icon="@drawable/ic_user"
+        android:title="Profile"
+        app:cnb_iconColor ="@color/profile_ic_color"/>
+
+
+</menu>
