@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import com.auf.cea.beatsapp.R
 import com.auf.cea.beatsapp.constants.PREFERENCE_NAME
 import com.auf.cea.beatsapp.databinding.ActivitySplashBinding
 import com.auf.cea.beatsapp.ui.landing.LoginActivity

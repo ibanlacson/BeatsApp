@@ -3,16 +3,10 @@ package com.auf.cea.beatsapp.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.commit
 import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.auf.cea.beatsapp.R
 import com.auf.cea.beatsapp.databinding.ActivityMainBinding
 import com.auf.cea.beatsapp.ui.fragments.*
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationView
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
 
 class MainActivity : AppCompatActivity(), ChipNavigationBar.OnItemSelectedListener {
