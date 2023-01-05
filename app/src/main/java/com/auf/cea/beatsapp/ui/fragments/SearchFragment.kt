@@ -1,60 +1,121 @@
 package com.auf.cea.beatsapp.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.auf.cea.beatsapp.R
+import com.auf.cea.beatsapp.constants.MXM_API_KEY
+import com.auf.cea.beatsapp.constants.MXM_BASE_URL
+import com.auf.cea.beatsapp.databinding.FragmentSearchBinding
+import com.auf.cea.beatsapp.models.MusixMatchModels.TrackSearchModel.Track
+import com.auf.cea.beatsapp.services.helpers.Retrofit
+import com.auf.cea.beatsapp.services.repositories.MusixmatchAPI
+import com.auf.cea.beatsapp.ui.adapters.TrackListAdapter
+import com.google.android.gms.auth.api.signin.internal.Storage
+import kotlinx.coroutines.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SearchFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class SearchFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+class SearchFragment : Fragment(), View.OnClickListener {
+    private lateinit var binding: FragmentSearchBinding
+    private lateinit var trackData: ArrayList<Track>
+    private lateinit var adapter: TrackListAdapter
+    private var isLoading: Boolean = false
+    private var pageCounter = 1
+    private var query = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
+        binding = FragmentSearchBinding.inflate(inflater,container,false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SearchFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SearchFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Initialize Variables
+        trackData = arrayListOf()
+
+
+        // Recycler View Configuration
+        adapter = TrackListAdapter(trackData,requireContext())
+        val layoutManager : RecyclerView.LayoutManager = LinearLayoutManager(requireContext())
+        with(binding){
+            rvTrackList.adapter = adapter
+            rvTrackList.layoutManager = layoutManager
+        }
+
+        // Configuring Listeners
+        binding.btnSearch.setOnClickListener(this)
+
+        // On Scroll Listeners
+        // TODO("add loading animation visible gone here")
+        binding.rvTrackList.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if ((!recyclerView.canScrollVertically(1)) && (newState == RecyclerView.SCROLL_STATE_IDLE)){
+                    if (!isLoading) {
+                        isLoading = true
+                        whileLoading()
+                        // TODO("change loading animation visibility to View.Visible here")
+                    }
                 }
             }
+        })
+
+    }
+
+    private fun whileLoading(){
+        // Increment Page Counter
+        pageCounter++
+        // call track data
+        getTrackData(query)
+    }
+
+    private fun getTrackData(query:String) {
+        val mxmAPI = Retrofit.getInstance(MXM_BASE_URL).create(MusixmatchAPI::class.java)
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = mxmAPI.searchTrack(MXM_API_KEY,query,pageCounter,10)
+            val trackDataResult = result.body()
+            if (trackDataResult != null){
+                trackData.addAll(trackDataResult.message.body.track_list)
+                Log.d("WHATSAPPPP", query)
+                withContext(Dispatchers.Main){
+                    adapter.updateData(trackData)
+                }
+            } else {
+                Log.d("NULLLLL ITO:", query)
+            }
+        }
+
+    }
+
+    override fun onClick(p0: View?) {
+        when(p0!!.id) {
+            (R.id.btn_search) -> {
+                // Reset Page Counter
+                pageCounter = 1
+
+                // Query and API Calls
+                if (query != binding.txtSearch.text.toString()){
+                    // Reset the view
+                    trackData = arrayListOf()
+
+                    query = binding.txtSearch.text.toString()
+                    Log.d("STRING", query)
+                    getTrackData(query)
+                } else {
+                    query = binding.txtSearch.text.toString()
+                    Log.d("STRING", query)
+                    getTrackData(query)
+                }
+            }
+        }
     }
 }

@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface MusixmatchAPI {
-    @GET("ws/1.1/track.search")
+    @GET("/ws/1.1/track.search")
     suspend fun searchTrack(
         @Query("apikey") apikey: String,
         @Query("q_track_artist") q:String,
@@ -15,7 +15,7 @@ interface MusixmatchAPI {
         @Query("page_size") size:Int
     ):Response<TrackSearchModel>
 
-    @GET("ws/1.1/track.lyrics.get")
+    @GET("/ws/1.1/track.lyrics.get")
     suspend fun getLyrics(
         @Query("apikey") apikey: String,
         @Query("track_id") track_id:String,
