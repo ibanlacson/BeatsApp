@@ -20,4 +20,12 @@ interface MusixmatchAPI {
         @Query("apikey") apikey: String,
         @Query("track_id") track_id:String,
     ):Response<GetLyricsModel>
+
+    @GET("/ws/1.1/matcher.lyrics.get")
+    suspend fun getLyricsViaISRC(
+        @Query("apikey") apikey: String,
+        @Query("track_isrc") track_isrc:String,
+        @Query("q_track") track: String,
+        @Query("q_artist") artist: String
+    ):Response<GetLyricsModel>
 }

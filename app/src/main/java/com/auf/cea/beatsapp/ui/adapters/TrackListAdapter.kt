@@ -9,7 +9,7 @@ import com.auf.cea.beatsapp.models.musixmatch.tracksearch.Track
 
 class TrackListAdapter(private var trackList: ArrayList<Track>, private var context:Context, private var adapterCallback: TrackListAdapterInterface): RecyclerView.Adapter<TrackListAdapter.AdapterView>() {
     interface TrackListAdapterInterface {
-        fun getLyrics(trackID:String)
+        fun getLyrics(trackID:String, trackData:Track)
     }
 
     inner class AdapterView(private var binding: ContentMxmTrackBinding): RecyclerView.ViewHolder(binding.root){
@@ -19,7 +19,7 @@ class TrackListAdapter(private var trackList: ArrayList<Track>, private var cont
                 txtTrackArtist.text = itemData.track.artist_name
                 btnLyrics.setOnClickListener {
                     // Replace Fragment
-                    adapterCallback.getLyrics(itemData.track.track_id.toString())
+                    adapterCallback.getLyrics(itemData.track.track_id.toString(), itemData)
                 }
             }
         }

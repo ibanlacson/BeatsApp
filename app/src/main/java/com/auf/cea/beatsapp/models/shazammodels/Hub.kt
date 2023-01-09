@@ -8,4 +8,4 @@ data class Hub(
     var options: List<Option>,
     var providers: List<Provider>,
     var type: String
-)
+): java.io.Serializable

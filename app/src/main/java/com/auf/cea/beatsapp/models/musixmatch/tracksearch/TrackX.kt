@@ -21,4 +21,4 @@ data class TrackX(
     var track_rating: Int,
     var track_share_url: String,
     var updated_time: String
-)
+):java.io.Serializable

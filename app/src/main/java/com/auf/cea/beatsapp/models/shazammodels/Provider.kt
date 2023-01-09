@@ -5,4 +5,4 @@ data class Provider(
     var caption: String,
     var images: Images,
     var type: String
-)
+): java.io.Serializable

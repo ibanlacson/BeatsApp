@@ -6,4 +6,4 @@ data class MusicDetectionModel(
     var timestamp: Long,
     var timezone: String,
     var track: Track
-)
+): java.io.Serializable

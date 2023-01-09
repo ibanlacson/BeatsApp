@@ -5,4 +5,4 @@ data class ImagesX(
     var coverart: String,
     var coverarthq: String,
     var joecolor: String
-)
+): java.io.Serializable

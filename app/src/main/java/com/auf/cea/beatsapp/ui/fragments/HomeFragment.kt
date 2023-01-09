@@ -1,5 +1,6 @@
 package com.auf.cea.beatsapp.ui.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -11,6 +12,8 @@ import android.widget.Toast
 import com.auf.cea.beatsapp.R
 import com.auf.cea.beatsapp.constants.SHAZAM_BASE_URL
 import com.auf.cea.beatsapp.databinding.FragmentHomeBinding
+import com.auf.cea.beatsapp.models.shazammodels.MusicDetectionModel
+import com.auf.cea.beatsapp.models.shazammodels.Section
 import com.auf.cea.beatsapp.models.shazammodels.Track
 import com.auf.cea.beatsapp.services.helpers.DetectionHelper
 import com.auf.cea.beatsapp.services.helpers.Retrofit
@@ -29,6 +32,17 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var detectedMusicData: Track
     private lateinit var helper: DetectionHelper
+    private lateinit var homeFragmentInterface: HomeFragmentInterface
+    private lateinit var trackData: MusicDetectionModel
+
+    interface HomeFragmentInterface {
+        fun passLyricsData(lyricsData:MusicDetectionModel, responseType:String)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        homeFragmentInterface = context as HomeFragmentInterface
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +61,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
         // Configuring Listeners and Initial States
         with(binding){
             fabStart.setOnClickListener(this@HomeFragment)
+            btnLyrics.setOnClickListener(this@HomeFragment)
+            btnShare.setOnClickListener(this@HomeFragment)
         }
     }
 
@@ -54,7 +70,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
     override fun onClick(p0: View?) {
         when(p0!!.id){
             (R.id.fab_start) -> {
-
                 // Configure View States
                 binding.llTrackView.visibility = View.GONE
                 with(binding.anDetecting){
@@ -77,9 +92,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             visibility = View.GONE
                             cancelAnimation()
                         }
-
                     }
                 }.start()
+            }
+
+            (R.id.btn_lyrics) -> {
+                homeFragmentInterface.passLyricsData(trackData,"shazam")
             }
         }
     }
@@ -96,6 +114,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
             if (musicDetectionData != null){
                 withContext(Dispatchers.Main) {
+                    trackData = musicDetectionData
                     if (musicDetectionData.matches.isNotEmpty()) {
                         detectedMusicData = musicDetectionData.track
                         Log.d("Success:", detectedMusicData.title)

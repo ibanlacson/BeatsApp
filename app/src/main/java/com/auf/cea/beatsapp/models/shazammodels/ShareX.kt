@@ -9,4 +9,4 @@ data class ShareX(
     var subject: String,
     var text: String,
     var twitter: String
-)
+): java.io.Serializable

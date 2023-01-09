@@ -56,7 +56,7 @@ class DetectionHelper (val parent: HomeFragment, val binding: FragmentHomeBindin
                             0,
                             BUFFER_SIZE
                         )
-                        Log.d("BUFFER ARRAY:", buffer.array().toString())
+//                        Log.d("BUFFER ARRAY:", buffer.array().toString())
                         buffer.clear()
                     }
                 }

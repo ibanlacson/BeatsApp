@@ -10,4 +10,4 @@ data class Option(
     var overflowimage: String,
     var providername: String,
     var type: String
-)
+): java.io.Serializable

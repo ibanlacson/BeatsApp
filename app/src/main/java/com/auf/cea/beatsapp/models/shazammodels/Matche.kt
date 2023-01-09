@@ -5,4 +5,4 @@ data class Matche(
     var id: String,
     var offset: Double,
     var timeskew: Double
-)
+): java.io.Serializable

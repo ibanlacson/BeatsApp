@@ -9,4 +9,4 @@ data class Section(
     var text: List<String>,
     var type: String,
     var youtubeurl: Youtubeurl
-)
+): java.io.Serializable

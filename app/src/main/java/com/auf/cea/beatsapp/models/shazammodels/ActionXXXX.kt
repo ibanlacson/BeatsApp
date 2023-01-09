@@ -5,4 +5,4 @@ data class ActionXXXX(
     var share: ShareX,
     var type: String,
     var uri: String
-)
+): java.io.Serializable

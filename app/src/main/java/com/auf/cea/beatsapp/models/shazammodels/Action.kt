@@ -5,4 +5,4 @@ data class Action(
     var name: String,
     var type: String,
     var uri: String
-)
+): java.io.Serializable

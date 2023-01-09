@@ -17,4 +17,4 @@ data class Track(
     var type: String,
     var url: String,
     var urlparams: Urlparams
-)
+): java.io.Serializable
