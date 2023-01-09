@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.auf.cea.beatsapp.R
 import com.auf.cea.beatsapp.constants.SHAZAM_BASE_URL
 import com.auf.cea.beatsapp.databinding.FragmentHomeBinding
@@ -77,13 +78,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             cancelAnimation()
                         }
 
-                        // Show Track View
-                        binding.llTrackView.visibility = View.VISIBLE
                     }
                 }.start()
             }
         }
     }
+
 
     private fun detectMusic(encodedString: String){
         val requestBody = RequestBody.create(MediaType.parse("text/plain"),encodedString)
@@ -93,13 +93,34 @@ class HomeFragment : Fragment(), View.OnClickListener {
             val result = shazamAPI.detectMusic(requestBody)
             Log.d("RESPONSE RESULT", result.toString())
             val musicDetectionData = result.body()
+
             if (musicDetectionData != null){
-                detectedMusicData = musicDetectionData.track
-                Log.d("Success:", detectedMusicData.title)
-                withContext(Dispatchers.IO) {
-                    with(binding){
-                        txtTrackTitle.text = detectedMusicData.title
-                        txtTrackArtist.text = detectedMusicData.subtitle
+                withContext(Dispatchers.Main) {
+                    if (musicDetectionData.matches.isNotEmpty()) {
+                        detectedMusicData = musicDetectionData.track
+                        Log.d("Success:", detectedMusicData.title)
+
+                        with(binding){
+                            llTrackView.visibility = View.VISIBLE
+                            txtTrackTitle.text = detectedMusicData.title
+                            txtTrackArtist.text = detectedMusicData.subtitle
+                        }
+
+                        // Update Album Art
+                        Glide.with(this@HomeFragment)
+                            .load(detectedMusicData.sections[0].metapages[1].image)
+                            .placeholder(R.drawable.ic_user) //Change to something appropriate
+                            .into(binding.imgAlbumArt)
+
+                        // Update Artist Image
+                        Glide.with(this@HomeFragment)
+                            .load(detectedMusicData.sections[0].metapages[0].image)
+                            .placeholder(R.drawable.ic_user)  //Change to something appropriate
+                            .into(binding.imgArtistArt)
+
+                    } else {
+                        Log.d("Toast Response:", "No music match! Please try again.")
+                        Toast.makeText(requireContext(),"No music match! Please try again.",Toast.LENGTH_SHORT).show()
                     }
                 }
             } else {

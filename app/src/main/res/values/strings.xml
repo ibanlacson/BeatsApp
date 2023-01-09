@@ -13,6 +13,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_track_title">Search Track Title</string>
     <string name="search">Search</string>
-    <string name="title">2012 (It Ain\'t the End) [feat. Nicki Minaj]</string>
-    <string name="artist">Jay Sean</string>
+    <string name="title">Fetching Title</string>
+    <string name="artist">Fetching Artist</string>
 </resources>
