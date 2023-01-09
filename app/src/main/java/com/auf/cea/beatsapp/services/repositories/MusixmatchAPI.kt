@@ -1,7 +1,7 @@
 package com.auf.cea.beatsapp.services.repositories
 
-import com.auf.cea.beatsapp.models.MusixMatchModels.GetLyricsModel.GetLyricsModel
-import com.auf.cea.beatsapp.models.MusixMatchModels.TrackSearchModel.TrackSearchModel
+import com.auf.cea.beatsapp.models.musixmatch.getlyrics.GetLyricsModel
+import com.auf.cea.beatsapp.models.musixmatch.tracksearch.TrackSearchModel
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

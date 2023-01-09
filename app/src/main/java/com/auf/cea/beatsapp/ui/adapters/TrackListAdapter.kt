@@ -5,14 +5,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.auf.cea.beatsapp.databinding.ContentMxmTrackBinding
-import com.auf.cea.beatsapp.models.MusixMatchModels.TrackSearchModel.Track
+import com.auf.cea.beatsapp.models.musixmatch.tracksearch.Track
 
-class TrackListAdapter(private var trackList: ArrayList<Track>, private var context:Context): RecyclerView.Adapter<TrackListAdapter.AdapterView>() {
+class TrackListAdapter(private var trackList: ArrayList<Track>, private var context:Context, private var adapterCallback: TrackListAdapterInterface): RecyclerView.Adapter<TrackListAdapter.AdapterView>() {
+    interface TrackListAdapterInterface {
+        fun getLyrics(trackID:String)
+    }
+
     inner class AdapterView(private var binding: ContentMxmTrackBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(itemData: Track){
             with(binding){
                 txtTrackTitle.text = itemData.track.track_name
                 txtTrackArtist.text = itemData.track.artist_name
+                btnLyrics.setOnClickListener {
+                    // Replace Fragment
+                    adapterCallback.getLyrics(itemData.track.track_id.toString())
+                }
             }
         }
     }

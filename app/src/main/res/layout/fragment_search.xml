@@ -24,24 +24,54 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:hint="Search Track Title"
-            android:minHeight="48dp" />
+            android:hint="@string/search_track_title"
+            android:imeOptions="actionGo"
+            android:inputType="text"
+            android:maxLines="1"
+            android:minHeight="48dp"
+            android:selectAllOnFocus="true"
+            android:singleLine="true" />
 
         <Button
             android:id="@+id/btn_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Search" />
+            android:text="@string/search" />
     </LinearLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/an_list_loading"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:lottie_rawRes="@raw/an_list_loading"
+        app:lottie_autoPlay="true"
+        app:lottie_cacheComposition="true"
+        app:layout_constraintBottom_toTopOf="@+id/an_drag_loading"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_track_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/an_drag_loading"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/an_drag_loading"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/an_drag_loading"
+        app:lottie_cacheComposition="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

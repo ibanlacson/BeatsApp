@@ -1,5 +1,6 @@
 package com.auf.cea.beatsapp.ui.splash
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +19,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Shared Preference Configuration
-        sharedPreferences = getSharedPreferences(PREFERENCE_NAME, MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
 
         // Animation
         object : CountDownTimer(2000,1000){

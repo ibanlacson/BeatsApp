@@ -1,21 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragments.HomeFragment"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btnStart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Start" />
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/an_detecting"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center"
+        app:lottie_rawRes="@raw/an_detection"
+        app:lottie_loop="true"
+        android:visibility="gone"/>
 
-    <Button
-        android:id="@+id/btnStop"
+    <LinearLayout
+        android:id="@+id/ll_track_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Stop" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+        <FrameLayout
+            android:layout_width="255dp"
+            android:layout_height="255dp">
 
-</LinearLayout>
+            <ImageView
+                android:id="@+id/img_album_art"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_gravity="center"
+                android:padding="15dp"
+                android:src="@drawable/album_cover"/>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/img_artist_art"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="bottom|end"
+                android:src="@drawable/artist_cover"
+                app:civ_border_width="3dp"
+                app:civ_border_color="#2B2E5C"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/txt_track_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/title"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/txt_track_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/artist"
+            android:textColor="@color/black"
+            android:textStyle="italic"
+            android:textSize="15sp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/btn_lyrics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="View Lyrics"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/btn_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:text="Share Music"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_mic"
+        android:layout_margin="16dp"/>
+
+
+</FrameLayout>

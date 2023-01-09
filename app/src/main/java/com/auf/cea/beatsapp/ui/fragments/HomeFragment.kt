@@ -1,37 +1,33 @@
 package com.auf.cea.beatsapp.ui.fragments
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.media.AudioFormat
-import android.media.AudioRecord
-import android.media.MediaRecorder
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Environment
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import com.auf.cea.beatsapp.R
+import com.auf.cea.beatsapp.constants.SHAZAM_BASE_URL
 import com.auf.cea.beatsapp.databinding.FragmentHomeBinding
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.OutputStreamWriter
-import java.nio.ByteBuffer
-import java.nio.charset.StandardCharsets
-import java.util.*
-import java.util.concurrent.atomic.AtomicBoolean
+import com.auf.cea.beatsapp.models.shazammodels.Track
+import com.auf.cea.beatsapp.services.helpers.DetectionHelper
+import com.auf.cea.beatsapp.services.helpers.Retrofit
+import com.auf.cea.beatsapp.services.repositories.ShazamAPI
+import com.bumptech.glide.Glide
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType
+import okhttp3.RequestBody
+
 
 class HomeFragment : Fragment(), View.OnClickListener {
 
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var recorder: AudioRecord
-    private lateinit var recordingThread: Thread
-    private val recordingInProgress = AtomicBoolean(false)
-
+    private lateinit var detectedMusicData: Track
+    private lateinit var helper: DetectionHelper
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,151 +40,71 @@ class HomeFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        checkPermission()
+        // Variable Init
+        helper = DetectionHelper(this,binding)
 
+        // Configuring Listeners and Initial States
         with(binding){
-            btnStart.isEnabled = true
-            btnStop.isEnabled = false
-
-            btnStart.setOnClickListener(this@HomeFragment)
-            btnStop.setOnClickListener(this@HomeFragment)
+            fabStart.setOnClickListener(this@HomeFragment)
         }
     }
 
-    private inner class RecordingRunnable : Runnable {
-        override fun run() {
-//            obsolete na ire
-//            val file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath + "/RecPCM" + ".pcm"
-            val file = requireContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.absolutePath + "/FinalRecPCM" + ".pcm"
-            Log.d("FILESTORAGE: ", file)
-            val buffer = ByteBuffer.allocateDirect(BUFFER_SIZE)
-            try {
-                FileOutputStream(file).use { outStream ->
-                    while (recordingInProgress.get()) {
-                        val result = recorder.read(buffer, BUFFER_SIZE)
-                        if (result < 0) {
-                            throw RuntimeException(
-                                "Reading of audio buffer failed: " + getBufferReadFailureReason(result)
-                            )
-                        }
-                        outStream.write(
-                            buffer.array(),
-                            0,
-                            BUFFER_SIZE
-                        )
-                        Log.d("BUFFER ARRAY:", buffer.array().toString())
-                        buffer.clear()
-                    }
-                }
-//                Log.d("BUFFER ARRAY:", buffer.array().toString())
-//                Log.d("Encoded:", getBase64String())
-            } catch (e: IOException) {
-                throw RuntimeException("Writing of recorded audio failed", e)
-            }
-        }
-
-        private fun getBufferReadFailureReason(result: Int): Any? {
-            return when (result) {
-                AudioRecord.ERROR_INVALID_OPERATION -> "ERROR_INVALID_OPERATION"
-                AudioRecord.ERROR_BAD_VALUE -> "ERROR_BAD_VALUE"
-                AudioRecord.ERROR_DEAD_OBJECT -> "ERROR_DEAD_OBJECT"
-                AudioRecord.ERROR -> "ERROR"
-                else -> "Unknown ($result)"
-            }
-        }
-    }
-
-    private fun checkPermission() {
-        if ((ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) &&
-            (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)){
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(
-                    Manifest.permission.RECORD_AUDIO,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                111
-            )
-        } else {
-            binding.btnStart.isEnabled = true
-        }
-    }
-
-    private fun startRecording(){
-        checkPermission()
-        recorder = AudioRecord(
-            MediaRecorder.AudioSource.MIC, SAMPLING_RATE_IN_HZ,
-            CHANNEL_CONFIG, AUDIO_FORMAT, BUFFER_SIZE)
-        recorder.startRecording()
-
-        recordingInProgress.set(true)
-        recordingThread = Thread(RecordingRunnable(), "Recording Thread")
-        recordingThread.start()
-
-    }
-
-    private fun stopRecording(){
-        recordingInProgress.set(false)
-        recorder.stop()
-        recorder.release()
-    }
-
-    private fun getBase64String() {
-//        val file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath + "/RecPCM" + ".pcm"
-        val file = requireContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.absolutePath + "/FinalRecPCM" + ".pcm"
-        val byteArray:ByteArray = File(file).readBytes()
-        val encodedString = Base64.getEncoder().encodeToString(byteArray)
-        OutputStreamWriter(
-//            FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath + "/RecPCM" + ".txt"),
-            FileOutputStream(requireContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.absolutePath + "/FinalRecPCM" + ".txt"),
-            StandardCharsets.UTF_8
-        ).use { out ->
-            out.write(
-                encodedString
-            )
-        }
-        Log.d(HomeFragment::class.java.simpleName.toString(),encodedString)
-    }
 
     override fun onClick(p0: View?) {
         when(p0!!.id){
-            (R.id.btnStart) -> {
-                with(binding){
-                    btnStart.isEnabled = false
-                    btnStop.isEnabled = true
-                }
-                startRecording()
-                object : CountDownTimer(5000, 1000){
-                    override fun onTick(p0: Long) {
+            (R.id.fab_start) -> {
 
+                // Configure View States
+                binding.llTrackView.visibility = View.GONE
+                with(binding.anDetecting){
+                    visibility = View.VISIBLE
+                    playAnimation()
+                }
+
+                // Start Thread
+                helper.startRecording()
+
+                object : CountDownTimer(3000, 1000){
+                    override fun onTick(p0: Long) {
                     }
                     override fun onFinish() {
-                        with(binding){
-                            btnStart.isEnabled = true
-                            btnStop.isEnabled = false
+                        helper.stopRecording()
+                        detectMusic(helper.getBase64String())
+
+                        // Hide and Cancel Animation
+                        with(binding.anDetecting){
+                            visibility = View.GONE
+                            cancelAnimation()
                         }
-                        stopRecording()
-                        getBase64String()
+
+                        // Show Track View
+                        binding.llTrackView.visibility = View.VISIBLE
                     }
                 }.start()
-            }
-            (R.id.btnStop) -> {
-                with(binding){
-                    btnStart.isEnabled = true
-                    btnStop.isEnabled = false
-                }
-                stopRecording()
-                getBase64String()
             }
         }
     }
 
-    companion object {
-        private const val SAMPLING_RATE_IN_HZ = 44_100
-        private const val CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO
-        private const val AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT
-        private const val BUFFER_SIZE_FACTOR = 3
+    private fun detectMusic(encodedString: String){
+        val requestBody = RequestBody.create(MediaType.parse("text/plain"),encodedString)
 
-        private val BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLING_RATE_IN_HZ, CHANNEL_CONFIG,
-            AUDIO_FORMAT) * BUFFER_SIZE_FACTOR
+        val shazamAPI = Retrofit.getInstance(SHAZAM_BASE_URL).create(ShazamAPI::class.java)
+        GlobalScope.launch (Dispatchers.IO){
+            val result = shazamAPI.detectMusic(requestBody)
+            Log.d("RESPONSE RESULT", result.toString())
+            val musicDetectionData = result.body()
+            if (musicDetectionData != null){
+                detectedMusicData = musicDetectionData.track
+                Log.d("Success:", detectedMusicData.title)
+                withContext(Dispatchers.IO) {
+                    with(binding){
+                        txtTrackTitle.text = detectedMusicData.title
+                        txtTrackArtist.text = detectedMusicData.subtitle
+                    }
+                }
+            } else {
+                Log.d("ERROR", "NULL OUTPUT")
+            }
+        }
     }
 }

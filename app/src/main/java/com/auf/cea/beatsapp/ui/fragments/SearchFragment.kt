@@ -1,6 +1,8 @@
 package com.auf.cea.beatsapp.ui.fragments
 
+import android.content.Context
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,20 +14,31 @@ import com.auf.cea.beatsapp.R
 import com.auf.cea.beatsapp.constants.MXM_API_KEY
 import com.auf.cea.beatsapp.constants.MXM_BASE_URL
 import com.auf.cea.beatsapp.databinding.FragmentSearchBinding
-import com.auf.cea.beatsapp.models.MusixMatchModels.TrackSearchModel.Track
+import com.auf.cea.beatsapp.models.musixmatch.tracksearch.Track
 import com.auf.cea.beatsapp.services.helpers.Retrofit
 import com.auf.cea.beatsapp.services.repositories.MusixmatchAPI
 import com.auf.cea.beatsapp.ui.adapters.TrackListAdapter
-import com.google.android.gms.auth.api.signin.internal.Storage
 import kotlinx.coroutines.*
 
-class SearchFragment : Fragment(), View.OnClickListener {
+class SearchFragment : Fragment(),
+    View.OnClickListener,
+    TrackListAdapter.TrackListAdapterInterface{
     private lateinit var binding: FragmentSearchBinding
     private lateinit var trackData: ArrayList<Track>
     private lateinit var adapter: TrackListAdapter
+    private lateinit var searchFragmentInterface: SearchFragmentInterface
     private var isLoading: Boolean = false
     private var pageCounter = 1
     private var query = ""
+
+    interface SearchFragmentInterface{
+        fun passTrackID(trackID: String)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        searchFragmentInterface = context as SearchFragmentInterface
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +57,7 @@ class SearchFragment : Fragment(), View.OnClickListener {
 
 
         // Recycler View Configuration
-        adapter = TrackListAdapter(trackData,requireContext())
+        adapter = TrackListAdapter(trackData,requireContext(), this)
         val layoutManager : RecyclerView.LayoutManager = LinearLayoutManager(requireContext())
         with(binding){
             rvTrackList.adapter = adapter
@@ -55,7 +68,6 @@ class SearchFragment : Fragment(), View.OnClickListener {
         binding.btnSearch.setOnClickListener(this)
 
         // On Scroll Listeners
-        // TODO("add loading animation visible gone here")
         binding.rvTrackList.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
@@ -63,7 +75,12 @@ class SearchFragment : Fragment(), View.OnClickListener {
                     if (!isLoading) {
                         isLoading = true
                         whileLoading()
-                        // TODO("change loading animation visibility to View.Visible here")
+
+                        // Start Animation
+                        with(binding.anDragLoading){
+                            visibility = View.VISIBLE
+                            playAnimation()
+                        }
                     }
                 }
             }
@@ -72,10 +89,42 @@ class SearchFragment : Fragment(), View.OnClickListener {
     }
 
     private fun whileLoading(){
-        // Increment Page Counter
-        pageCounter++
-        // call track data
-        getTrackData(query)
+        object : CountDownTimer(2000,1000){
+            override fun onTick(p0: Long) {
+
+            }
+            override fun onFinish() {
+                isLoading = false
+                // Increment Page Counter
+                pageCounter++
+                // call track data
+                getTrackData(query)
+                // Hide loading animation
+                with(binding.anDragLoading){
+                    cancelAnimation()
+                    visibility = View.GONE
+                }
+            }
+        }.start()
+    }
+
+    private fun showLoading(){
+        with(binding){
+            rvTrackList.visibility = View.GONE
+            anListLoading.visibility = View.VISIBLE
+            anListLoading.playAnimation()
+        }
+        object : CountDownTimer(3000,1000){
+            override fun onTick(p0: Long) {
+            }
+            override fun onFinish() {
+                with(binding){
+                    rvTrackList.visibility = View.VISIBLE
+                    anListLoading.visibility = View.GONE
+                    anListLoading.cancelAnimation()
+                }
+            }
+        }.start()
     }
 
     private fun getTrackData(query:String) {
@@ -85,12 +134,10 @@ class SearchFragment : Fragment(), View.OnClickListener {
             val trackDataResult = result.body()
             if (trackDataResult != null){
                 trackData.addAll(trackDataResult.message.body.track_list)
-                Log.d("WHATSAPPPP", query)
                 withContext(Dispatchers.Main){
                     adapter.updateData(trackData)
                 }
             } else {
-                Log.d("NULLLLL ITO:", query)
             }
         }
 
@@ -101,6 +148,9 @@ class SearchFragment : Fragment(), View.OnClickListener {
             (R.id.btn_search) -> {
                 // Reset Page Counter
                 pageCounter = 1
+
+                // Call animation
+                showLoading()
 
                 // Query and API Calls
                 if (query != binding.txtSearch.text.toString()){
@@ -117,5 +167,9 @@ class SearchFragment : Fragment(), View.OnClickListener {
                 }
             }
         }
+    }
+
+    override fun getLyrics(trackID: String) {
+        searchFragmentInterface.passTrackID(trackID)
     }
 }

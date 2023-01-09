@@ -32,7 +32,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(p0: View?) {
         when(p0!!.id) {
             (R.id.btn_login) -> {
-                // Check if empty or Password Match
+                // Check if empty
                 if (binding.txtEmail.text.isNullOrEmpty()){
                     binding.txtEmail.error = "Required"
                     return
@@ -55,6 +55,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
             }
+
             (R.id.txt_sign_up) -> {
                 val intent = Intent(this, SignUpActivity::class.java)
                 startActivity(intent)

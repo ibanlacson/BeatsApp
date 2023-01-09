@@ -1,4 +1,4 @@
-package com.auf.cea.beatsapp.models.MusixMatchModels.GetLyricsModel
+package com.auf.cea.beatsapp.models.musixmatch.getlyrics
 
 data class Lyrics(
     var explicit: Int,

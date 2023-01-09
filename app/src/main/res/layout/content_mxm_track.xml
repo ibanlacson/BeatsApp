@@ -15,25 +15,39 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:background="@color/profile_ic_color"
-            android:padding="5dp">
-            <TextView
-                android:id="@+id/txt_track_title"
-                android:layout_width="match_parent"
+            android:padding="5dp"
+            android:layout_gravity="center_vertical">
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Track Title Here"
-                android:textStyle="bold"
-                android:textSize="23sp"
-                android:textColor="@color/black"/>
-            <TextView
-                android:id="@+id/txt_track_artist"
-                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="5"
+                >
+                <TextView
+                    android:id="@+id/txt_track_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Track Title Here"
+                    android:textStyle="bold"
+                    android:textSize="23sp"
+                    android:textColor="@color/black"/>
+                <TextView
+                    android:id="@+id/txt_track_artist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="by: Artist Here"
+                    android:textStyle="italic"
+                    android:textSize="18sp"
+                    android:textColor="#3F51B5"/>
+            </LinearLayout>
+            <Button
+                android:id="@+id/btn_lyrics"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="by: Artist Here"
-                android:textStyle="italic"
-                android:textSize="18sp"
-                android:textColor="#3F51B5"/>
+                android:text="View"
+                android:layout_gravity="center"/>
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

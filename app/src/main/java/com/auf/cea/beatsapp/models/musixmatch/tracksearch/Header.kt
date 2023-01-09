@@ -1,4 +1,4 @@
-package com.auf.cea.beatsapp.models.MusixMatchModels.TrackSearchModel
+package com.auf.cea.beatsapp.models.musixmatch.tracksearch
 
 data class Header(
     var available: Int,
