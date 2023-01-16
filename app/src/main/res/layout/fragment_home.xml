@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragments.HomeFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#23055A">
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/an_detecting"
@@ -20,9 +21,10 @@
         android:id="@+id/ll_track_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:gravity="center"
+        android:orientation="vertical"
         android:visibility="gone">
+
         <FrameLayout
             android:layout_width="255dp"
             android:layout_height="255dp">
@@ -33,7 +35,7 @@
                 android:layout_height="250dp"
                 android:layout_gravity="center"
                 android:padding="15dp"
-                android:src="@drawable/album_cover"/>
+                android:src="@drawable/album_cover" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/img_artist_art"
@@ -41,8 +43,8 @@
                 android:layout_height="80dp"
                 android:layout_gravity="bottom|end"
                 android:src="@drawable/artist_cover"
-                app:civ_border_width="3dp"
-                app:civ_border_color="#2B2E5C"/>
+                app:civ_border_color="#2B2E5C"
+                app:civ_border_width="3dp" />
         </FrameLayout>
 
         <TextView
@@ -51,9 +53,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@string/title"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="20sp"/>
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txt_track_artist"
@@ -61,32 +64,34 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@string/artist"
-            android:textColor="@color/black"
-            android:textStyle="italic"
-            android:textSize="15sp"/>
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="italic" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_gravity="center"
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/btn_lyrics"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
+                android:backgroundTint="@color/bg_button"
                 android:text="View Lyrics"
-                android:layout_weight="1"/>
+                app:cornerRadius="10dp" />
 
             <Button
                 android:id="@+id/btn_share"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/bg_button"
                 android:text="Share Music"
-                android:layout_weight="1"/>
+                app:cornerRadius="10dp" />
 
         </LinearLayout>
     </LinearLayout>
@@ -96,8 +101,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        app:backgroundTint="@color/bg_button"
+        app:showMotionSpec="@anim/nav_default_pop_enter_anim"
         android:src="@drawable/ic_mic"
-        android:layout_margin="16dp"/>
+        tools:ignore="SpeakableTextPresentCheck" />
 
 
 </FrameLayout>

@@ -6,8 +6,11 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import com.auf.cea.beatsapp.constants.IS_KEPT
 import com.auf.cea.beatsapp.constants.PREFERENCE_NAME
+import com.auf.cea.beatsapp.constants.USER_ID
 import com.auf.cea.beatsapp.databinding.ActivitySplashBinding
+import com.auf.cea.beatsapp.ui.MainActivity
 import com.auf.cea.beatsapp.ui.landing.LoginActivity
 
 class SplashActivity : AppCompatActivity() {
@@ -27,9 +30,19 @@ class SplashActivity : AppCompatActivity() {
             }
             override fun onFinish() {
 
-                val intent = Intent(this@SplashActivity,LoginActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
+                // checked if logged in
+                if ((sharedPreferences.getString(IS_KEPT,"")=="true") &&
+                    (sharedPreferences.getString(USER_ID,"") != "")) {
+
+                    val intent = Intent(this@SplashActivity, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                } else {
+
+                    val intent = Intent(this@SplashActivity, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                }
             }
         }.start()
     }

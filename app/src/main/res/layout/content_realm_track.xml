@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="7dp"
+        app:cardCornerRadius="8dp"
+        android:layout_margin="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="15dp"
+            android:background="@color/bg_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="5">
+                <TextView
+                    android:id="@+id/txt_track_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Track Title Here"
+                    android:layout_centerVertical="true"
+                    android:textStyle="bold"
+                    android:textSize="23sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/passion_one"
+                    android:layout_weight="4.5"
+                    android:layout_gravity="start" />
+                <ToggleButton
+                    android:id="@+id/toggle_favorite"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/selector_toggle_button"
+                    android:textOff=""
+                    android:textOn=""
+                    android:checked="true" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/txt_track_artist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="by: Artist Here"
+                android:textSize="16sp"
+                android:fontFamily="@font/rubik_bold"
+                android:textColor="@color/white"/>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/txt_source"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/rubik"
+                    android:text="From: Shazam API"
+                    android:textStyle="italic"
+                    android:textColor="@color/white"/>
+
+                <TextView
+                    android:id="@+id/btn_lyrics"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View More >"
+                    android:fontFamily="@font/rubik_bold"
+                    android:textStyle="bold|italic"
+                    android:textColor="@color/lavander"
+                    android:layout_gravity="end|bottom"/>
+            </FrameLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

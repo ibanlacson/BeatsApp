@@ -32,7 +32,7 @@ class SearchFragment : Fragment(),
     private var query = ""
 
     interface SearchFragmentInterface{
-        fun passTrackID(trackID: String, trackData: Track)
+        fun transferTrackModel(trackID: String, trackData: Track)
     }
 
     override fun onAttach(context: Context) {
@@ -137,7 +137,6 @@ class SearchFragment : Fragment(),
                 withContext(Dispatchers.Main){
                     adapter.updateData(trackData)
                 }
-            } else {
             }
         }
 
@@ -170,6 +169,6 @@ class SearchFragment : Fragment(),
     }
 
     override fun getLyrics(trackID: String, trackData: Track) {
-        searchFragmentInterface.passTrackID(trackID, trackData)
+        searchFragmentInterface.transferTrackModel(trackID, trackData)
     }
 }

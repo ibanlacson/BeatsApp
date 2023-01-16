@@ -16,20 +16,3 @@ object Retrofit {
             .build()
     }
 }
-
-//class GsonStringConverterFactory : Converter.Factory() {
-//    fun toRequestBody(type: Type, annotations: Array<Annotation?>?): Converter<*, RequestBody>? {
-//        return if (String::class.java == type) {
-//            object : Converter<String?, RequestBody?>() {
-//                @Throws(IOException::class)
-//                fun convert(value: String?): RequestBody {
-//                    return RequestBody.create(MEDIA_TYPE, value)
-//                }
-//            }
-//        } else null
-//    }
-//
-//    companion object {
-//        private val MEDIA_TYPE: MediaType = MediaType.parse("text/plain")
-//    }
-//}

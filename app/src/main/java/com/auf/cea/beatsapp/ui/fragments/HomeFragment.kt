@@ -1,6 +1,8 @@
 package com.auf.cea.beatsapp.ui.fragments
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -13,7 +15,6 @@ import com.auf.cea.beatsapp.R
 import com.auf.cea.beatsapp.constants.SHAZAM_BASE_URL
 import com.auf.cea.beatsapp.databinding.FragmentHomeBinding
 import com.auf.cea.beatsapp.models.shazammodels.MusicDetectionModel
-import com.auf.cea.beatsapp.models.shazammodels.Section
 import com.auf.cea.beatsapp.models.shazammodels.Track
 import com.auf.cea.beatsapp.services.helpers.DetectionHelper
 import com.auf.cea.beatsapp.services.helpers.Retrofit
@@ -36,7 +37,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private lateinit var trackData: MusicDetectionModel
 
     interface HomeFragmentInterface {
-        fun passLyricsData(lyricsData:MusicDetectionModel, responseType:String)
+        fun transferLyricModel(lyricsData:MusicDetectionModel, responseType:String)
     }
 
     override fun onAttach(context: Context) {
@@ -65,7 +66,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
             btnShare.setOnClickListener(this@HomeFragment)
         }
     }
-
 
     override fun onClick(p0: View?) {
         when(p0!!.id){
@@ -97,11 +97,20 @@ class HomeFragment : Fragment(), View.OnClickListener {
             }
 
             (R.id.btn_lyrics) -> {
-                homeFragmentInterface.passLyricsData(trackData,"shazam")
+                homeFragmentInterface.transferLyricModel(trackData,"shazam")
+            }
+
+            (R.id.btn_share)->{
+                findShareLink(trackData)
             }
         }
     }
 
+    private fun findShareLink(data: MusicDetectionModel){
+        val shareLink = data.track.share
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(shareLink.href))
+        startActivity(intent)
+    }
 
     private fun detectMusic(encodedString: String){
         val requestBody = RequestBody.create(MediaType.parse("text/plain"),encodedString)
@@ -128,7 +137,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                         // Update Album Art
                         Glide.with(this@HomeFragment)
                             .load(detectedMusicData.sections[0].metapages[1].image)
-                            .placeholder(R.drawable.ic_user) //Change to something appropriate
+                            .placeholder(R.drawable.ic_album) //Change to something appropriate
                             .into(binding.imgAlbumArt)
 
                         // Update Artist Image

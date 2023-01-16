@@ -1,11 +1,17 @@
 package com.auf.cea.beatsapp.ui.landing
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.auf.cea.beatsapp.R
+import com.auf.cea.beatsapp.constants.IS_KEPT
+import com.auf.cea.beatsapp.constants.PREFERENCE_NAME
+import com.auf.cea.beatsapp.constants.USER_ID
 import com.auf.cea.beatsapp.databinding.ActivityLogin2Binding
 import com.auf.cea.beatsapp.ui.MainActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -13,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding : ActivityLogin2Binding
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +28,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
         // Initialize Firebase
         firebaseAuth = FirebaseAuth.getInstance()
+
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
 
         // Set Listeners
         with(binding){
@@ -47,6 +57,19 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 val password = binding.txtPassword.text.toString()
                 firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener{
                     if (it.isSuccessful){
+
+                        if(binding.chkStayLoggedIn.isChecked) {
+                            val editor = sharedPreferences.edit()
+                            editor.putString(IS_KEPT,"true")
+                            editor.putString(USER_ID, it.result.user?.uid.toString())
+                            editor.apply()
+                        } else {
+                            val editor = sharedPreferences.edit()
+                            editor.putString(USER_ID, it.result.user?.uid.toString())
+                            editor.apply()
+                        }
+
+                        Log.d("USER ID:", it.result.user?.uid.toString())
                         val intent = Intent(this, MainActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)

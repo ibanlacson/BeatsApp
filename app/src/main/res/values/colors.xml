@@ -14,4 +14,12 @@
     <color name="search_ic_color">#c9379d</color>
     <color name="profile_ic_color">#e6a919</color>
     <color name="history_ic_color">#006A69</color>
+
+    <!-- theme colors-->
+    <color name="bg_dark">#05020A</color>
+    <color name="bg_content">#5D039D</color>
+    <color name="bg_button">#B10455</color>
+    <color name="persian_indigo">#23055A</color>
+    <color name="lavander">#c9bccb</color>
+
 </resources>
