@@ -1,2 +1,3 @@
 # BeatsApp
-Beats: Music Detector and Lyrics Finder Application
+## Beats: Music Recognition and Lyrics Finder Application
+### LACSON, ASISTIN, PAULE, DIZON
