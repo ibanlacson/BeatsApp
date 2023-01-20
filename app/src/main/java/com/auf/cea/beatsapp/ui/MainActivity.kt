@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity(),
                 editor.putString(USER_NAME,result.firstName)
             } else {
                 val userDetailsDialog = UserDetailsDialog()
+                userDetailsDialog.isCancelable = false
                 userDetailsDialog.show(supportFragmentManager,null)
             }
         }
